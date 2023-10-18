@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum TransactionMethod{
+  credit_card
+  debit_card
+}
+
+enum PayableStatus{
+  paid
+  waiting_funds
+}
+
+
+model Transaction{
+  id                    String @id @map("_id") @db.ObjectId @default(auto()) 
+  value                 Float
+  payment               TransactionMethod
+  card_number           String
+  card_owner            String
+  expire_date           String
+  verification_value    String
+  payable               Payable?
+}
+
+
+model Payable{
+  id                     String @id @map("_id") @db.ObjectId @default(auto())
+  afterFeeValue          Float
+  payment_date           DateTime
+  status                 PayableStatus
+  transaction_id         String @db.ObjectId @unique
+  transaction            Transaction @relation(fields: [transaction_id],references: [id])
+}
