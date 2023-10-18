@@ -1,73 +1,52 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Transaction Processing Service
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+The Transaction Processing Service is a backend application built with Nest.js and TypeScript. It allows you to process transactions, create payables, and provides a means for clients to check their balances. 
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Requirements
 
-## Description
+The service is designed to meet the following requirements:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+1. **Transaction Processing:**
+   - Receive transaction information, including the transaction value, description, payment method (debit_card or credit_card), card details, and cardholder information.
+   - Return a list of created transactions, displaying only the last 4 digits of the card number for security.
 
-## Installation
+2. **Payables Creation:**
+   - For debit card transactions:
+     - Create payables with a status of "paid" indicating that the client has received the amount.
+     - Set the payment date (payment_date) as the transaction creation date (D+0).
+   - For credit card transactions:
+     - Create payables with a status of "waiting_funds" indicating that the client will receive the money in the future.
+     - Set the payment date (payment_date) as the transaction creation date + 30 days (D+30).
+   - Deduct a processing fee (fee) from the transaction amount:
+     - 3% fee for debit card transactions.
+     - 5% fee for credit card transactions.
 
-```bash
-$ npm install
-```
+3. **Balance Inquiry:**
+   - Provide a method for clients to check their balance, displaying:
+     - Available balance (disponível): The total amount received (payables with status "paid").
+     - Waiting funds (a receber): The total amount yet to be received (payables with status "waiting_funds").
 
-## Running the app
+## Technologies Used
 
-```bash
-# development
-$ npm run start
+- Nest.js
+- TypeScript
+- Prisma
+- MongoDB
+- MongoDB Atlas
 
-# watch mode
-$ npm run start:dev
+## Getting Started
 
-# production mode
-$ npm run start:prod
-```
+To run the service locally, follow these steps:
 
-## Test
+1. Clone the repository to your local machine.
 
-```bash
-# unit tests
-$ npm run test
+2. Install the project dependencies:
 
-# e2e tests
-$ npm run test:e2e
+   ```bash
+   npm install
 
-# test coverage
-$ npm run test:cov
-```
+3. Start the application:
 
-## Support
+   npm run start
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+4. The service will be accessible at http://localhost:3000.
